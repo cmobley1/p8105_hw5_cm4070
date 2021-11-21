@@ -122,6 +122,25 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
+## Problem 2
+
+This code will create a dataframe with all file names and tidy data for spaghetti plot.
+
+```{r}
+data_df = tibble(files = list.files("./data")) %>%
+  mutate(files = str_c("data", files, sep = "/")) 
+
+new_df = data_df %>%
+  mutate(participants = map(files, read_csv)) %>%
+  unnest() %>%
+  mutate(subject_id = 1:20) %>%
+  mutate(arm = case_when(str_detect(files, 'data/c') ~ "control", 
+                         str_detect(files, 'data/e') ~ "experimental")) %>%
+  select(-files) %>%
+  pivot_longer(cols = week_1:week_8, names_to = "week", values_to = "observations")
+```
+
+
 ## Problem 3
 
 The code below uploads the `iris` dataset and introduces some missing values.
