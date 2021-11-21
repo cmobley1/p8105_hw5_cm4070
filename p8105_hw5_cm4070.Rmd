@@ -124,9 +124,9 @@ results_df %>%
 
 ## Problem 2
 
-This code will create a dataframe with all file names and tidy data for spaghetti plot.
+This code will create a dataframe with all file names, iterate over file names and read in data for each subject and save this as a new variable "participants", and then tidy data for spaghetti plot.
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 data_df = tibble(files = list.files("./data")) %>%
   mutate(files = str_c("data", files, sep = "/")) 
 
@@ -140,6 +140,16 @@ new_df = data_df %>%
   pivot_longer(cols = week_1:week_8, names_to = "week", values_to = "observations")
 ```
 
+This code creates a spaghetti plot which looks at the observations on each subject over time.
+
+```{r}
+spaghetti_plot = 
+  ggplot(data = new_df, aes(x = week, y = observations, color = arm, group = subject_id)) + geom_line() +  geom_point() + geom_path() + labs(caption = "Observations on each subject over time")
+
+spaghetti_plot
+```
+
+The plot shows that the experimental group appears to have consistently increasing number of observations over time. Every individual had an increased number of observation by week 8 than week 1. While the control group did not have a consistent trend over time. The number of observations within the control group varied, and by week 8 was approximately the same number of observations as week 1. 
 
 ## Problem 3
 
